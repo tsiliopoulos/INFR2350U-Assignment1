@@ -100,5 +100,14 @@
     <None Include="..\Assets\Shaders\passThru_v.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\Assets\Shaders\specular_f.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\ambient_f.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Shaders\nolight_f.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
