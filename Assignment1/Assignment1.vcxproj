@@ -109,6 +109,7 @@
     <ClInclude Include="..\include\VertexBufferObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Assets\Shaders\ambientSpecularRim_f.glsl" />
     <None Include="..\Assets\Shaders\ambient_f.glsl" />
     <None Include="..\Assets\Shaders\nolight_f.glsl" />
     <None Include="..\Assets\Shaders\specularRim_f.glsl" />
