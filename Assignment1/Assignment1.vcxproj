@@ -111,6 +111,7 @@
   <ItemGroup>
     <None Include="..\Assets\Shaders\ambient_f.glsl" />
     <None Include="..\Assets\Shaders\nolight_f.glsl" />
+    <None Include="..\Assets\Shaders\specularRim_f.glsl" />
     <None Include="..\Assets\Shaders\specular_f.glsl" />
     <None Include="..\Assets\Shaders\toon_f.glsl" />
     <None Include="..\Assets\Shaders\default_f.glsl" />
