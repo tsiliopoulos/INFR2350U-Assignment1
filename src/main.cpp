@@ -55,12 +55,19 @@ std::shared_ptr<Material> outlineMaterial;
 
 enum GameMode
 {
-	DEFAULT,
-	TOON,
-	TOON_OUTLINES
+	NO_LIGHTING,
+	AMBIENT_ONLY,
+	SPECULAR_ONLY,
+    SPECULAR_RIM,
+    AMBIENT_SPEC_RIM,
+    DIFFUSE_WARP_RAMP,
+    SPECULAR_WARP_RAMP,
+    COLOR_GRADING_WARM,
+    COLOR_GRADING_COOL,
+    COLOR_GRADING_CUSTOM
 };
 
-GameMode currentMode = DEFAULT;
+GameMode currentMode = NO_LIGHTING;
 
 void initializeShaders()
 {
@@ -114,28 +121,14 @@ void initializeScene()
 	// store a reference to it so you don't need to look it up every time.
 	meshes["floor"] = floorMesh;
 	meshes["sphere"] = sphereMesh;
-	meshes["torus"] = torusMesh;
+	
 
 	// Create objects
 	gameobjects["floor"] = std::make_shared<GameObject>(glm::vec3(0.0f, 0.0f, 0.0f), floorMesh, defaultMaterial);
 	gameobjects["sphere"] = std::make_shared<GameObject>(glm::vec3(0.0f, 5.0f, 0.0f), sphereMesh, defaultMaterial);
-	gameobjects["bigTorus"] = std::make_shared<GameObject>(glm::vec3(0.0f, 2.0f, 0.0f), torusMesh, defaultMaterial);
-	gameobjects["bigTorus"]->setScale(3.0f);
 	
-	// Generate a bunch of objects in a circle
-	int numObjects = 12;
-	float circleStep = 360.f / numObjects;
-	float colorStep = 1.0f / numObjects;
-	for (int i = 0; i < numObjects; i++)
-	{
-		glm::vec3 pos, colour = getColorFromHue(colorStep * i);
-		std::string name = ("torus" + std::to_string(i));
-		pos.x = cos(circleStep*(float)i*degToRad) * 10.0f;
-		pos.y = 2.0f;
-		pos.z = sin(circleStep*(float)i*degToRad) * 10.0f;
-		gameobjects[name] = std::make_shared<GameObject>(pos, torusMesh, defaultMaterial);
-		gameobjects[name]->colour = glm::vec4(colour, 1.0f);
-	}
+	
+
 
 	// Set object properties
 	gameobjects["sphere"]->colour = glm::vec4(1.0f);
@@ -186,7 +179,6 @@ void setMaterialForAllGameObjects(std::shared_ptr<Material> mat)
 	}
 }
 
-void updateTorusColour();
 
 // This is where we draw stuff
 void DisplayCallbackFunction(void)
@@ -197,13 +189,11 @@ void DisplayCallbackFunction(void)
 	// Update all gameobjects
 	updateScene();
 
-	updateTorusColour();
-
-
+        
 	switch (currentMode)
 	{
-		// Regular lambert shading
-		case DEFAULT: // press 1
+		// No Lighting
+		case NO_LIGHTING: // press 1
 		{
 			// Turn Culling off
 			glDisable(GL_CULL_FACE);
@@ -225,8 +215,8 @@ void DisplayCallbackFunction(void)
 		}
 		break;
 
-		// Toon shading
-		case TOON: // press 2
+		// Ambient Light only
+		case AMBIENT_ONLY: // press 2
 		{
 			// Turn Culling off
 			glDisable(GL_CULL_FACE);
@@ -249,8 +239,8 @@ void DisplayCallbackFunction(void)
 		}
 		break;
 
-		// Toon shading + outlines
-		case TOON_OUTLINES: // press 3
+		// Specular Lighting only
+		case SPECULAR_ONLY: // press 3
 		{
 			// Clear back buffer
 			FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
@@ -292,6 +282,314 @@ void DisplayCallbackFunction(void)
 
 		}
 		break;
+
+        // Specular + Rim Lighting 
+        case SPECULAR_RIM: // press 4
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
+
+        // Ambient + Specular + Rim Lighting
+        case AMBIENT_SPEC_RIM: // press 5
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
+
+        // Diffuse Warp / Ramp
+        case DIFFUSE_WARP_RAMP: // press 6
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
+
+        // Specular Warp / Ramp
+        case SPECULAR_WARP_RAMP: // press 7
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
+
+        // Color Grading Warm Filter
+        case COLOR_GRADING_WARM: // press 8
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
+
+        // Color Grading Cool Filter
+        case COLOR_GRADING_COOL: // press 9
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
+
+        // Specular Lighting only
+        case COLOR_GRADING_CUSTOM: // press 0
+        {
+            // Clear back buffer
+            FrameBufferObject::clearFrameBuffer(glm::vec4(0.8f, 0.0f, 0.8f, 0.0f));
+
+            glCullFace(GL_FRONT_FACE);
+
+            glPolygonMode(GL_BACK, GL_LINE);
+
+            glLineWidth(6.0f);
+
+
+
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(outlineMaterial);
+
+            // Set material properties
+            outlineMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+            // Turn Culling off
+            glCullFace(GL_BACK);
+
+            // Turn Solid Fill On
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            // Tell all game objects to use the toon shading material
+            setMaterialForAllGameObjects(toonMaterial);
+
+            // Set material properties
+            toonMaterial->vec4Uniforms["u_lightPos"] = playerCamera.viewMatrix * lightPos;
+
+            // Draw the scene to the back buffer
+            drawScene(playerCamera);
+
+        }
+        break;
 	}
 
 	/* Swap Buffers to Make it show up on screen */
@@ -340,18 +638,46 @@ void KeyboardCallbackFunction(unsigned char key, int x, int y)
 void KeyboardUpCallbackFunction(unsigned char key, int x, int y)
 {
 	switch (key)
-	{
+	{            
 		case '1':
-			currentMode = DEFAULT;
+			currentMode = NO_LIGHTING;
 		break;
 
 		case '2':
-			currentMode = TOON;
+			currentMode = AMBIENT_ONLY;
 		break;
 
 		case '3':
-			currentMode = TOON_OUTLINES;
+			currentMode = SPECULAR_ONLY;
 		break;
+
+        case '4':
+            currentMode = SPECULAR_RIM;
+            break;
+
+        case '5':
+            currentMode = AMBIENT_SPEC_RIM;
+            break;
+
+        case '6':
+            currentMode = DIFFUSE_WARP_RAMP;
+            break;
+
+        case '7':
+            currentMode = SPECULAR_WARP_RAMP;
+            break;
+
+        case '8':
+            currentMode = COLOR_GRADING_WARM;
+            break;
+
+        case '9':
+            currentMode = COLOR_GRADING_COOL;
+            break;
+
+        case '0':
+            currentMode = COLOR_GRADING_CUSTOM;
+            break;
 
 
 	default:
@@ -496,11 +822,3 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void updateTorusColour()
-{
-	// All hail torus god
-	static float t = 0.0f;
-	t += deltaTime * 0.1f;
-	if (t >= 1.0f) t = 0.0f;
-	gameobjects["bigTorus"]->colour = getColorFromHue(t);
-}
