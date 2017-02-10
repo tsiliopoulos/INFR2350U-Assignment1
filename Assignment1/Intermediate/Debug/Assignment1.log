@@ -1,0 +1,24 @@
+﻿  VertexBufferObject.cpp
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\vertexbufferobject.cpp(35): warning C4018: '<': signed/unsigned mismatch
+  Texture2D.cpp
+  OBJMesh.cpp
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\ttk\objmesh.cpp(88): warning C4018: '<': signed/unsigned mismatch
+  MeshBase.cpp
+  IO.cpp
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\ttk\io.cpp(21): warning C4244: '=': conversion from 'std::streamoff' to 'std::size_t', possible loss of data
+  ShaderProgram.cpp
+  Shader.cpp
+  main.cpp
+  GameObject.cpp
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\include\ttk\camera.h(34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\include\ttk\camera.h(48): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\include\ttk\camera.h(49): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\gameobject.cpp(77): warning C4018: '<': signed/unsigned mismatch
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\gameobject.cpp(94): warning C4018: '<': signed/unsigned mismatch
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\gameobject.cpp(114): warning C4018: '<': signed/unsigned mismatch
+  FrameBufferObject.cpp
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\framebufferobject.cpp(53): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+c:\users\tsili\onedrive\documents\courses\infr2350u - intermediate computer graphics\assignments\assignment 1\assignment1\src\shaderprogram.cpp(65): warning C4715: 'ShaderProgram::linkProgram': not all control paths return a value
+  Assignment1.vcxproj -> C:\Users\tsili\OneDrive\Documents\Courses\INFR2350U - Intermediate Computer Graphics\Assignments\Assignment 1\Assignment1\bin\Debug\Assignment1.exe
+  Assignment1.vcxproj -> C:\Users\tsili\OneDrive\Documents\Courses\INFR2350U - Intermediate Computer Graphics\Assignments\Assignment 1\Assignment1\bin\Debug\Assignment1.pdb (Full PDB)
